@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Listings collection
+    match /listings/{listingId} {
+      allow read: if true; // Anyone can browse listings
+      allow create: if request.auth != null; // Must be logged in to post
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.sellerId; // Only owner can edit/delete
+    }
+
+    // Messages collection
+    match /messages/{messageId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.senderId || 
+         request.auth.uid == resource.data.receiverId);
+      allow create: if request.auth != null;
+    }
+  }
+}

@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Signup() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { signup } = useAuth();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -25,16 +25,26 @@ export default function Signup() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email.endsWith(".edu")) {
       setError("You must use a valid .edu college email to join.");
       return;
     }
     
-    // Call mock login as if they just registered
-    login(formData.email, formData.password);
-    router.push("/marketplace");
+    try {
+      await signup(
+        formData.email, 
+        formData.password, 
+        formData.name, 
+        formData.campus, 
+        formData.department, 
+        formData.year
+      );
+      router.push("/marketplace");
+    } catch (err) {
+      setError(err.message || "Failed to create an account.");
+    }
   };
 
   return (

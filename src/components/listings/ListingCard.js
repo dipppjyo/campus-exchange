@@ -12,8 +12,11 @@ export default function ListingCard({ listing }) {
       <div style={{ position: "relative", height: "200px", width: "100%", backgroundColor: "var(--border)", overflow: "hidden" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
-          src={listing.images[0]} 
+          src={listing.images?.[0] || "https://placehold.co/600x400/EEE/31343C?font=montserrat&text=No+Image"} 
           alt={listing.title} 
+          onError={(e) => {
+            e.target.src = "https://placehold.co/600x400/EEE/31343C?font=montserrat&text=Image+Not+Found";
+          }}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
         <div style={{ position: "absolute", top: "10px", right: "10px", display: "flex", gap: "5px" }}>
@@ -42,8 +45,8 @@ export default function ListingCard({ listing }) {
           </div>
           
           <div className="flex items-center gap-2 text-sm text-muted">
-            <span>👤 {listing.seller.name.split(' ')[0]}</span>
-            <span>⭐ {listing.seller.rating}</span>
+            <span>👤 {listing.sellerName?.split(' ')[0] || "User"}</span>
+            <span>⭐ {listing.sellerRating || 5.0}</span>
           </div>
         </div>
       </div>

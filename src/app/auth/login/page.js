@@ -12,16 +12,19 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email.includes("@") || !email.endsWith(".edu")) {
       setError("Please use a valid college .edu email address.");
       return;
     }
     
-    // Call mock login
-    login(email, password);
-    router.push("/marketplace");
+    try {
+      await login(email, password);
+      router.push("/marketplace");
+    } catch (err) {
+      setError("Invalid email or password.");
+    }
   };
 
   return (

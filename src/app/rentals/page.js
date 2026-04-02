@@ -1,17 +1,60 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useCampus } from "@/context/CampusContext";
-import { mockListings } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
+import { db } from "@/lib/firebase";
+import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function Rentals() {
   const { selectedCampus } = useCampus();
-  
-  // Filter for only 'rent' listingType
-  let rentalListings = mockListings.filter(l => l.listingType === "rent");
-  
-  if (selectedCampus) {
-    rentalListings = rentalListings.filter(l => l.campus === selectedCampus.id);
+  const [rentalListings, setRentalListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => setLoading(false), 8000);
+
+    try {
+      const q = query(
+        collection(db, "listings"),
+        where("listingType", "==", "rent"),
+        orderBy("createdAt", "desc")
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const items = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setRentalListings(items);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      }, (error) => {
+        console.error("Rentals snapshot error:", error);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      });
+
+      return () => {
+        clearTimeout(loadingTimeout);
+        unsubscribe();
+      };
+    } catch (err) {
+      console.error("Rentals init error:", err);
+      setLoading(false);
+    }
+  }, []);
+
+  const filtered = selectedCampus
+    ? rentalListings.filter(l => l.campus === selectedCampus.id)
+    : rentalListings;
+
+  if (loading) {
+    return (
+      <div className="container py-16 text-center animate-pulse">
+        <h2 className="text-2xl font-bold text-muted">Loading rentals...</h2>
+      </div>
+    );
   }
 
   return (
@@ -27,12 +70,12 @@ export default function Rentals() {
         <h2 className="text-2xl font-bold">
           {selectedCampus ? `Rentals at ${selectedCampus.name}` : 'All Rentals'}
         </h2>
-        <span className="badge badge-accent">{rentalListings.length} available</span>
+        <span className="badge badge-accent">{filtered.length} available</span>
       </div>
 
-      {rentalListings.length > 0 ? (
+      {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {rentalListings.map(listing => (
+          {filtered.map(listing => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>

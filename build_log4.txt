@@ -1,0 +1,36 @@
+﻿
+> campus-exchange@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 5.9s
+  Running TypeScript ...
+  Finished TypeScript in 162ms ...
+  Collecting page data using 11 workers ...
+node.exe : 
+At C:\Program 
+Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (:  
+  String) [], RemoteExc   
+ eption
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+> Build error occurred
+Error: Page 
+"/listing/[id]" is 
+missing 
+"generateStaticParams()" 
+so it cannot be used with 
+"output: export" config.
+    at ignore-listed 
+frames

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { mockCategories, mockDepartments } from "@/lib/data";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function PostItem() {
   const { user } = useAuth();
@@ -19,6 +21,8 @@ export default function PostItem() {
     listingType: "sell",
     isUrgent: false
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,12 +32,34 @@ export default function PostItem() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Normally this would be a fetch call to an API route
-    // For now, just alert and redirect back to marketplace
-    alert("Item posted successfully! (Mocked)");
-    router.push("/marketplace");
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      setError("");
+      const listingData = {
+        ...formData,
+        price: formData.listingType === "donate" ? 0 : parseFloat(formData.price),
+        seller: { name: user.name, id: user.id, rating: user.rating?.average || 5.0 },
+        sellerId: user.id,
+        sellerName: user.name,
+        campus: user.campus || "c1",
+        createdAt: serverTimestamp(),
+        images: ["https://placehold.co/600x400/EEE/31343C?font=montserrat&text=Item+Image"]
+      };
+
+      await addDoc(collection(db, "listings"), listingData);
+      
+      alert("Item posted successfully!");
+      router.push("/marketplace");
+    } catch (error) {
+      console.error("Error posting item:", error);
+      setError(error.message || "Failed to post item. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // If not logged in, show warning
@@ -42,7 +68,7 @@ export default function PostItem() {
       <div className="container py-16 text-center animate-fade-in">
         <div className="card p-8 max-w-md mx-auto" style={{ padding: 'var(--space-8)' }}>
           <h2 className="text-2xl font-bold mb-4">Verification Required</h2>
-          <p className="text-muted mb-6">You must be logged in as a verified student to post items on your campus exchange.</p>
+          <p className="text-muted mb-6">You must be logged in as a verified student to post items on CampusSwap.</p>
           <div className="flex flex-col gap-2">
             <button onClick={() => router.push("/auth/login")} className="btn btn-primary">Login Now</button>
             <button onClick={() => router.push("/auth/signup")} className="btn btn-outline">Sign Up</button>
@@ -56,6 +82,12 @@ export default function PostItem() {
     <div className="container py-8 max-w-2xl mx-auto animate-fade-in">
       <h1 className="text-3xl font-bold mb-6">Post an Item</h1>
       
+      {error && (
+        <div className="mb-4 p-4 rounded-lg" style={{ backgroundColor: 'var(--danger-light)', color: 'var(--danger)', border: '1px solid var(--danger)' }}>
+          <strong>Error:</strong> {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="card p-8 flex flex-col gap-6" style={{ padding: 'var(--space-8)' }}>
         
         {/* Basic Info */}
@@ -152,8 +184,8 @@ export default function PostItem() {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary w-full text-lg mt-6 py-4">
-          Post Listing
+        <button type="submit" disabled={loading} className="btn btn-primary w-full text-lg mt-6 py-4">
+          {loading ? "Posting..." : "Post Listing"}
         </button>
       </form>
     </div>

@@ -1,16 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { mockListings, mockCategories } from "@/lib/data";
+import { useState, useEffect } from "react";
+import { mockCategories } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
 import { useCampus } from "@/context/CampusContext";
+import { db } from "@/lib/firebase";
+import { collection, query, limit, getDocs, orderBy } from "firebase/firestore";
 
 export default function Home() {
   const { selectedCampus } = useCampus();
-  
-  // Filter for urgent items and a few generic ones for demo
-  const urgentListings = mockListings.filter(l => l.isUrgent);
-  const featuredListings = mockListings.slice(0, 4);
+  const [urgentListings, setUrgentListings] = useState([]);
+  const [featuredListings, setFeaturedListings] = useState([]);
+
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const listingsRef = collection(db, "listings");
+        const recentQuery = query(
+          listingsRef,
+          orderBy("createdAt", "desc"),
+          limit(20)
+        );
+
+        const snapshot = await getDocs(recentQuery);
+        const allListings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        setUrgentListings(allListings.filter(l => l.isUrgent).slice(0, 4));
+        setFeaturedListings(allListings.slice(0, 8));
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+      }
+    };
+
+    fetchHomeData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   return (
     <div className="animate-fade-in">
@@ -24,7 +50,7 @@ export default function Home() {
             Join your college community marketplace to find cheap books, free notes, and more.
           </p>
           
-          <div className="flex gap-4 mt-4">
+          <div className="flex gap-4 mt-4" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
             <Link href="/marketplace" className="btn" style={{ backgroundColor: 'white', color: 'var(--primary)', padding: '1rem 2rem', fontSize: '1.125rem' }}>
               Browse Items
             </Link>
@@ -70,11 +96,17 @@ export default function Home() {
       {/* Trending / Featured */}
       <section className="container my-8 py-8">
         <h2 className="text-2xl font-bold mb-6">Trending Near You</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {featuredListings.map(listing => (
-            <ListingCard key={`featured-${listing.id}`} listing={listing} />
-          ))}
-        </div>
+        {featuredListings.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredListings.map(listing => (
+              <ListingCard key={`featured-${listing.id}`} listing={listing} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-surface border rounded-xl" style={{ borderColor: 'var(--border)' }}>
+            <p className="text-muted text-lg">No listings yet. Be the first to post an item!</p>
+          </div>
+        )}
       </section>
       
       {/* Semester Kits Banner */}

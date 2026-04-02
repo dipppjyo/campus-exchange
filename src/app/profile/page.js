@@ -2,14 +2,57 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { mockListings } from "@/lib/data";
+import { useState, useEffect } from "react";
 import ListingCard from "@/components/listings/ListingCard";
+import { db } from "@/lib/firebase";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 export default function ProfileDashboard() {
   const { user } = useAuth();
   const router = useRouter();
+  const [myListings, setMyListings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // If loading or not logged in, show redirect or message
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const loadingTimeout = setTimeout(() => setLoading(false), 8000);
+
+    try {
+      const q = query(
+        collection(db, "listings"),
+        where("sellerId", "==", user.id)
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const items = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setMyListings(items);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      }, (error) => {
+        console.error("Profile listings snapshot error:", error);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      });
+
+      return () => {
+        clearTimeout(loadingTimeout);
+        unsubscribe();
+      };
+    } catch (err) {
+      console.error("Profile init error:", err);
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  // If loading or not logged in
   if (!user) {
     return (
       <div className="container py-16 text-center">
@@ -19,9 +62,13 @@ export default function ProfileDashboard() {
     );
   }
 
-  // Get user's active listings (mocked by matching u2 to John Doe for example, but here we'll just mock 2 items)
-  const myActiveListings = mockListings.slice(0, 2); 
-  const myCompletedExchanges = 5;
+  if (loading) {
+    return (
+      <div className="container py-16 text-center animate-pulse">
+        <h2 className="text-2xl font-bold text-muted">Loading your dashboard...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8 max-w-5xl mx-auto animate-fade-in">
@@ -45,7 +92,7 @@ export default function ProfileDashboard() {
                 <div className="text-xs text-muted">Trust Score</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-lg text-primary">{myCompletedExchanges}</div>
+                <div className="font-bold text-lg text-primary">{user.exchanges || 0}</div>
                 <div className="text-xs text-muted">Exchanges</div>
               </div>
             </div>
@@ -79,10 +126,10 @@ export default function ProfileDashboard() {
           </div>
 
           <div className="card p-6 mb-8" style={{ padding: 'var(--space-6)' }}>
-            <h3 className="text-xl font-bold mb-4">Active Listings ({myActiveListings.length})</h3>
-            {myActiveListings.length > 0 ? (
+            <h3 className="text-xl font-bold mb-4">Active Listings ({myListings.length})</h3>
+            {myListings.length > 0 ? (
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {myActiveListings.map(listing => (
+                  {myListings.map(listing => (
                     <ListingCard key={listing.id} listing={listing} />
                   ))}
                </div>
@@ -99,17 +146,17 @@ export default function ProfileDashboard() {
             <div className="flex flex-col gap-4">
               <div className="p-4 border rounded-md" style={{ borderColor: 'var(--border)' }}>
                 <div className="flex justify-between mb-2">
-                  <span className="font-bold">Sold "Casio FX-991EX"</span>
+                  <span className="font-bold">Sold &quot;Casio FX-991EX&quot;</span>
                   <span className="text-sm text-yellow-600">⭐ 5.0</span>
                 </div>
-                <p className="text-sm text-muted">"Great seller, item was exactly as described and met near the library on time." - Freshman Tom</p>
+                <p className="text-sm text-muted">&quot;Great seller, item was exactly as described and met near the library on time.&quot; - Freshman Tom</p>
               </div>
               <div className="p-4 border rounded-md" style={{ borderColor: 'var(--border)' }}>
                 <div className="flex justify-between mb-2">
-                  <span className="font-bold">Bought "Engineering Drawing Board"</span>
+                  <span className="font-bold">Bought &quot;Engineering Drawing Board&quot;</span>
                   <span className="text-sm text-yellow-600">⭐ 5.0</span>
                 </div>
-                <p className="text-sm text-muted">"Thanks for negotiating on the price!" - Senior Amanda</p>
+                <p className="text-sm text-muted">&quot;Thanks for negotiating on the price!&quot; - Senior Amanda</p>
               </div>
             </div>
           </div>

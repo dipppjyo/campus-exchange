@@ -1,0 +1,100 @@
+﻿
+> campus-exchange@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+
+  Creating an optimized production build ...
+node.exe : 
+At C:\Program 
+Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (:  
+  String) [], RemoteExc   
+ eption
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+> Build error occurred
+Error: Turbopack build 
+failed with 1 errors:
+./src/app/listing/[id]/pag
+e.js:183:8
+Next.js can't recognize 
+the exported 
+`generateStaticParams` 
+field in route. App pages 
+cannot use both "use 
+client" and export 
+function 
+"generateStaticParams()".
+  [90m181 |[0m
+  [90m182 |[0m [90m// 
+Required for static 
+export - pages are 
+rendered client-side[0m
+[31m[1m>[0m [90m183 
+|[0m [36mexport[0m 
+[36mfunction[0m 
+generateStaticParams() {
+  [90m    |[0m        [
+31m[1m^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m184 
+|[0m   [36mreturn[0m 
+[];
+  [90m    |[0m 
+[31m[1m^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m185 
+|[0m }
+  [90m    |[0m 
+[31m[1m^[0m
+  [90m186 |[0m
+  [90m187 |[0m
+
+The exported 
+configuration object in a 
+source file needs to have 
+a very specific format 
+from which some 
+properties can be 
+statically parsed at 
+compiled-time.
+
+Import traces:
+  Client Component 
+Browser:
+    ./src/app/listing/[id]
+/page.js [Client 
+Component Browser]
+    ./src/app/listing/[id]
+/page.js [Server 
+Component]
+
+  Client Component SSR:
+    ./src/app/listing/[id]
+/page.js [Client 
+Component SSR]
+    ./src/app/listing/[id]
+/page.js [Server 
+Component]
+
+https://nextjs.org/docs/ap
+p/api-reference/file-conve
+ntions/route-segment-confi
+g
+
+
+    at <unknown> (./src/ap
+p/listing/[id]/page.js:183
+:8)
+    at <unknown> (https://
+nextjs.org/docs/app/api-re
+ference/file-conventions/r
+oute-segment-config)

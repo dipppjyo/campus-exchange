@@ -5,13 +5,18 @@ import { createContext, useContext, useState, useEffect } from "react";
 const CampusContext = createContext();
 
 export function CampusProvider({ children }) {
-  const [selectedCampus, setSelectedCampus] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("selected_campus");
-      return saved ? JSON.parse(saved) : null;
+  const [selectedCampus, setSelectedCampus] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("selected_campus");
+    if (saved) {
+      try {
+        setSelectedCampus(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse campus from localStorage", e);
+      }
     }
-    return null;
-  });
+  }, []);
 
   useEffect(() => {
     if (selectedCampus) {

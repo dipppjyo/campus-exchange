@@ -1,17 +1,60 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useCampus } from "@/context/CampusContext";
-import { mockListings } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
+import { db } from "@/lib/firebase";
+import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function FreeItems() {
   const { selectedCampus } = useCampus();
-  
-  // Filter for only 'donate' listingType
-  let freeListings = mockListings.filter(l => l.listingType === "donate");
-  
-  if (selectedCampus) {
-    freeListings = freeListings.filter(l => l.campus === selectedCampus.id);
+  const [freeListings, setFreeListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => setLoading(false), 8000);
+
+    try {
+      const q = query(
+        collection(db, "listings"),
+        where("listingType", "==", "donate"),
+        orderBy("createdAt", "desc")
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const items = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setFreeListings(items);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      }, (error) => {
+        console.error("Free items snapshot error:", error);
+        clearTimeout(loadingTimeout);
+        setLoading(false);
+      });
+
+      return () => {
+        clearTimeout(loadingTimeout);
+        unsubscribe();
+      };
+    } catch (err) {
+      console.error("Free items init error:", err);
+      setLoading(false);
+    }
+  }, []);
+
+  const filtered = selectedCampus 
+    ? freeListings.filter(l => l.campus === selectedCampus.id)
+    : freeListings;
+
+  if (loading) {
+    return (
+      <div className="container py-16 text-center animate-pulse">
+        <h2 className="text-2xl font-bold text-muted">Loading free items...</h2>
+      </div>
+    );
   }
 
   return (
@@ -27,12 +70,12 @@ export default function FreeItems() {
         <h2 className="text-2xl font-bold">
           {selectedCampus ? `Free items at ${selectedCampus.name}` : 'All Free Items'}
         </h2>
-        <span className="badge badge-secondary">{freeListings.length} available</span>
+        <span className="badge badge-secondary">{filtered.length} available</span>
       </div>
 
-      {freeListings.length > 0 ? (
+      {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {freeListings.map(listing => (
+          {filtered.map(listing => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
