@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { mockCampuses, mockDepartments } from "@/lib/data";
+import { useCampus } from "@/context/CampusContext";
+import { mockDepartments } from "@/lib/data";
 import Link from "next/link";
 
 export default function Signup() {
   const router = useRouter();
   const { signup } = useAuth();
+  const { availableCampuses } = useCampus();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -27,8 +29,8 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email.endsWith(".edu")) {
-      setError("You must use a valid .edu college email to join.");
+    if (!formData.email.includes("@")) {
+      setError("Please enter a valid email address.");
       return;
     }
     
@@ -70,8 +72,8 @@ export default function Signup() {
             </div>
 
             <div className="input-group">
-              <label className="input-label">College Email (.edu)</label>
-              <input name="email" type="email" required className="input-field" placeholder="alex@college.edu" value={formData.email} onChange={handleChange} />
+              <label className="input-label">Email Address</label>
+              <input name="email" type="email" required className="input-field" placeholder="alex@example.com" value={formData.email} onChange={handleChange} />
             </div>
 
             <div className="input-group">
@@ -83,7 +85,7 @@ export default function Signup() {
               <label className="input-label">Campus</label>
               <select name="campus" required className="input-field" value={formData.campus} onChange={handleChange}>
                 <option value="">Select Campus...</option>
-                {mockCampuses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {(availableCampuses || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
 
@@ -110,7 +112,7 @@ export default function Signup() {
 
           {/* Verification Warning */}
           <div className="p-4 bg-primary-light border border-primary rounded-md text-sm mt-2" style={{ backgroundColor: 'var(--primary-light)', borderColor: 'var(--primary)', borderWidth: '1px', borderStyle: 'solid', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
-            <strong>Note:</strong> We will send a verification link to your .edu email. Only verified students are allowed to post items.
+            <strong>Note:</strong> We will send a verification link to your email. Only verified students are allowed to post items.
           </div>
 
           <button type="submit" className="btn btn-primary w-full mt-2 py-3 text-lg">

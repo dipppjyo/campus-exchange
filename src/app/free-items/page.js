@@ -17,8 +17,7 @@ export default function FreeItems() {
     try {
       const q = query(
         collection(db, "listings"),
-        where("listingType", "==", "donate"),
-        orderBy("createdAt", "desc")
+        where("listingType", "==", "donate")
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -59,12 +58,7 @@ export default function FreeItems() {
 
   return (
     <div className="container py-16 animate-fade-in">
-      <div className="card p-12 text-center mb-12" style={{ backgroundColor: 'var(--secondary-light)', border: '1px solid var(--secondary)' }}>
-        <h1 className="text-4xl font-bold text-secondary mb-4">Free & Donation Section</h1>
-        <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--secondary-hover)' }}>
-          Help out your juniors! This section is dedicated to textbooks, old notes, lab files, and other items being given away for free on your campus.
-        </p>
-      </div>
+
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">

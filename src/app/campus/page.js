@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { mockCampuses } from "@/lib/data";
 import { useCampus } from "@/context/CampusContext";
 
 export default function CampusSelection() {
   const router = useRouter();
-  const { selectedCampus, setSelectedCampus } = useCampus();
+  const { selectedCampus, setSelectedCampus, availableCampuses } = useCampus();
   const [search, setSearch] = useState("");
 
-  const filteredCampuses = mockCampuses.filter(c => 
+  const filteredCampuses = (availableCampuses || []).filter(c => 
     c.name.toLowerCase().includes(search.toLowerCase()) || 
     c.city.toLowerCase().includes(search.toLowerCase())
   );

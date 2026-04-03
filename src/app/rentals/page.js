@@ -17,8 +17,7 @@ export default function Rentals() {
     try {
       const q = query(
         collection(db, "listings"),
-        where("listingType", "==", "rent"),
-        orderBy("createdAt", "desc")
+        where("listingType", "==", "rent")
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -59,12 +58,7 @@ export default function Rentals() {
 
   return (
     <div className="container py-16 animate-fade-in">
-      <div className="card p-12 text-center mb-12" style={{ backgroundColor: 'var(--accent-light)', border: '1px solid var(--accent)' }}>
-        <h1 className="text-4xl font-bold text-accent mb-4">Campus Rentals</h1>
-        <p className="text-xl max-w-2xl mx-auto" style={{ color: '#B45309' }}>
-          Don&apos;t want to buy? Rent calculators, drafters, lab coats, and heavy equipment for a day, week, or the entire semester.
-        </p>
-      </div>
+
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">

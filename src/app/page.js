@@ -64,15 +64,15 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section className="container my-8 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Categories</h2>
-          <Link href="/marketplace" className="text-primary font-bold">View All →</Link>
+      <section className="container my-4 py-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Categories</h2>
+          <Link href="/marketplace" className="text-primary text-sm font-bold">View All →</Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 md:grid-cols-4 gap-3">
           {mockCategories.slice(0, 10).map((cat, i) => (
-            <Link href={`/marketplace?category=${encodeURIComponent(cat)}`} key={i} className="card flex items-center justify-center text-center" style={{ padding: 'var(--space-4)', minHeight: '100px', backgroundColor: 'var(--surface)' }}>
-              <span className="font-bold">{cat}</span>
+            <Link href={`/marketplace?category=${encodeURIComponent(cat)}`} key={i} className="card flex items-center justify-center text-center" style={{ padding: 'var(--space-2)', minHeight: '60px', backgroundColor: 'var(--surface)' }}>
+              <span className="font-semibold text-sm">{cat}</span>
             </Link>
           ))}
         </div>

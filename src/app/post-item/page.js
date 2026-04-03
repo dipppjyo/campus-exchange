@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { mockCategories, mockDepartments } from "@/lib/data";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function PostItem() {
   const { user } = useAuth();
@@ -21,8 +22,23 @@ export default function PostItem() {
     listingType: "sell",
     isUrgent: false
   });
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      alert("You can only upload up to 5 images.");
+      return;
+    }
+    setImageFiles(files);
+    
+    // Create preview URLs
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(previews);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -39,6 +55,19 @@ export default function PostItem() {
     try {
       setLoading(true);
       setError("");
+      
+      let imageUrls = ["https://placehold.co/600x400/EEE/31343C?font=montserrat&text=Item+Image"];
+      
+      if (imageFiles.length > 0) {
+        imageUrls = [];
+        for (const file of imageFiles) {
+          const imageRef = ref(storage, `listings/${Date.now()}_${file.name}`);
+          const uploadResult = await uploadBytes(imageRef, file);
+          const downloadUrl = await getDownloadURL(uploadResult.ref);
+          imageUrls.push(downloadUrl);
+        }
+      }
+
       const listingData = {
         ...formData,
         price: formData.listingType === "donate" ? 0 : parseFloat(formData.price),
@@ -47,7 +76,7 @@ export default function PostItem() {
         sellerName: user.name,
         campus: user.campus || "c1",
         createdAt: serverTimestamp(),
-        images: ["https://placehold.co/600x400/EEE/31343C?font=montserrat&text=Item+Image"]
+        images: imageUrls
       };
 
       await addDoc(collection(db, "listings"), listingData);
@@ -177,11 +206,27 @@ export default function PostItem() {
         {/* Image Upload placeholder */}
         <div className="flex flex-col gap-4 mt-4">
           <h3 className="text-xl font-bold border-b pb-2" style={{ borderBottom: '1px solid var(--border)' }}>Images</h3>
-          <div className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-8 text-center" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
+          <div className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-8 text-center relative hover:bg-gray-50 transition" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              onChange={handleImageChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              title="Click to upload images"
+            />
             <span className="text-4xl mb-2">📸</span>
-            <p className="font-bold">Click to upload images</p>
-            <p className="text-sm text-muted">Supports JPG, PNG (Max 5MB)</p>
+            <p className="font-bold">Click or drag to upload images</p>
+            <p className="text-sm text-muted">Supports JPG, PNG (Max 5 images)</p>
           </div>
+          
+          {imagePreviews.length > 0 && (
+            <div className="flex gap-4 overflow-x-auto py-2">
+              {imagePreviews.map((src, i) => (
+                <img key={i} src={src} alt="Preview" className="h-24 w-24 object-cover rounded-lg border" style={{ borderColor: 'var(--border)' }} />
+              ))}
+            </div>
+          )}
         </div>
 
         <button type="submit" disabled={loading} className="btn btn-primary w-full text-lg mt-6 py-4">

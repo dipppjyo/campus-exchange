@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -21,12 +22,6 @@ export default function AdminDashboard() {
   // In a real app we'd verify user.isAdmin securely on the server
   if (!user || user.name !== "Alex Doe") { 
     // Mocking Alex Doe as admin for demo
-    // return (
-    //   <div className="container py-16 text-center">
-    //     <h2 className="text-2xl font-bold text-danger">Access Denied</h2>
-    //     <p className="text-muted">You do not have administrative privileges.</p>
-    //   </div>
-    // );
   }
 
   return (
@@ -55,7 +50,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         
         {/* User Management */}
         <div className="card p-0 overflow-hidden">
@@ -107,14 +102,14 @@ export default function AdminDashboard() {
                 <p className="text-sm mb-3">Reported by: {r.reportedBy}</p>
                 <div className="flex gap-2">
                   <button className="btn btn-outline py-1 px-3 text-sm">View Listing</button>
-                  <button className="btn btn-primary py-1 px-3 text-sm bg-danger border-danger">Remove Listing</button>
+                  <button className="btn btn-primary py-1 px-3 text-sm bg-danger border-danger">Remove</button>
                 </div>
               </div>
             ))}
           </div>
         </div>
-
       </div>
+
     </div>
   );
 }

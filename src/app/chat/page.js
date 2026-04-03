@@ -174,15 +174,14 @@ export default function ChatInbox() {
         <main className="w-2/3 flex flex-col bg-gray-50 relative" style={{ backgroundColor: '#F9FAFB' }}>
           {activeChat ? (
             <>
-              {/* Chat Header */}
               <div className="p-4 border-b bg-surface flex justify-between items-center z-10" style={{ borderColor: 'var(--border)' }}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold">
-                    {activeChat.user.avatar}
+                    {(activeChat.participantNames?.find(n => n !== user.name) || "User").charAt(0)}
                   </div>
                   <div>
-                    <h3 className="font-bold">{activeChat.user.name}</h3>
-                    <p className="text-xs text-muted">Viewing: <span className="font-bold text-primary">{activeChat.listing.title}</span> (${activeChat.listing.price})</p>
+                    <h3 className="font-bold">{activeChat.participantNames?.find(n => n !== user.name) || "User"}</h3>
+                    <p className="text-xs text-muted">Viewing: <span className="font-bold text-primary">{activeChat.listingTitle}</span></p>
                   </div>
                 </div>
                 <button className="btn btn-outline text-sm py-1 px-3">Mark Sold</button>

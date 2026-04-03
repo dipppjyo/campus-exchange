@@ -11,7 +11,7 @@ export default function HowItWorks() {
           <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold flex-shrink-0">1</div>
           <div>
             <h3 className="text-2xl font-bold mb-2">Verify Your Student Status</h3>
-            <p className="text-lg text-muted">Sign up using your official .edu college email. We verify that you are an active student at the selected campus, ensuring a safe community with no outsiders.</p>
+            <p className="text-lg text-muted">Sign up using your email address. We verify that you are an active student, ensuring a safe community with no outsiders.</p>
           </div>
         </div>
 

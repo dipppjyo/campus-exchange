@@ -73,47 +73,50 @@ export default function Marketplace() {
   return (
     <div className="container py-8 flex flex-col md:flex-row gap-8 animate-fade-in" style={{ display: 'flex', gap: 'var(--space-8)' }}>
       {/* Sidebar Filters */}
-      <aside className="w-full md:w-64 flex-shrink-0" style={{ width: '100%', maxWidth: '250px' }}>
-        <div className="card p-6" style={{ padding: 'var(--space-6)' }}>
-          <h2 className="text-xl font-bold mb-4">Filters</h2>
+      <aside className="w-full md:w-64 flex-shrink-0" style={{ width: '100%', maxWidth: '240px' }}>
+        <div className="card p-4" style={{ padding: 'var(--space-4)' }}>
+          <h2 className="text-sm font-bold uppercase tracking-wider mb-3">Filters</h2>
           
-          <div className="input-group mb-4">
-            <label className="input-label">Search</label>
+          <div className="input-group mb-3">
+            <label className="text-xs font-semibold text-muted">Search</label>
             <input 
               type="text" 
-              className="input-field" 
-              placeholder="Search items..." 
+              className="input-field py-1.5 px-3 text-sm" 
+              placeholder="Items..." 
+              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <div className="input-group mb-4">
-            <label className="input-label">Category</label>
+          <div className="input-group mb-3">
+            <label className="text-xs font-semibold text-muted">Category</label>
             <select 
-              className="input-field"
+              className="input-field py-1.5 px-3 text-sm"
+              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">All Categories</option>
+              <option value="">All</option>
               {mockCategories.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
 
-          <div className="input-group mb-6">
-            <label className="input-label">Department</label>
+          <div className="input-group mb-4">
+            <label className="text-xs font-semibold text-muted">Department</label>
             <select 
-              className="input-field"
+              className="input-field py-1.5 px-3 text-sm"
+              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
             >
-              <option value="">All Departments</option>
+              <option value="">All</option>
               {mockDepartments.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
           
           <button 
-            className="btn btn-outline w-full"
+            className="btn btn-outline w-full py-1.5 text-xs font-bold"
             onClick={() => { setSearch(""); setCategory(""); setDepartment(""); }}
           >
             Clear Filters

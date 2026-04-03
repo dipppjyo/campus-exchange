@@ -14,8 +14,8 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email.includes("@") || !email.endsWith(".edu")) {
-      setError("Please use a valid college .edu email address.");
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address.");
       return;
     }
     
@@ -43,12 +43,12 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="input-group">
-            <label className="input-label">College Email (.edu)</label>
+            <label className="input-label">Email Address</label>
             <input 
               type="email" 
               required
               className="input-field" 
-              placeholder="you@college.edu"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />

@@ -130,7 +130,7 @@ export default function ListingDetailClient() {
               <span className="badge badge-outline">{listing.department}</span>
             </div>
             <h1 className="text-3xl font-bold mb-2">{listing.title}</h1>
-            <p className="text-Sm text-muted mb-4">Posted on {new Date(listing.createdAt).toLocaleDateString()}</p>
+            <p className="text-Sm text-muted mb-4">Posted on {listing.createdAt?.toDate ? listing.createdAt.toDate().toLocaleDateString() : new Date(listing.createdAt).toLocaleDateString()}</p>
             
             <div className="text-4xl font-bold text-primary mb-6">
               {listing.price === 0 ? "FREE" : `$${listing.price}`}
