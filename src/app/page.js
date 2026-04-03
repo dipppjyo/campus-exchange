@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section className="container my-8 py-4">
+      <section className="container my-6 py-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Categories</h2>
           <Link href="/marketplace" className="text-primary text-sm font-bold">View All →</Link>
@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* Urgent Sales */}
       {urgentListings.length > 0 && (
-        <section className="container my-8 py-8" style={{ backgroundColor: 'var(--danger-light)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-8)' }}>
+        <section className="container my-6 py-8" style={{ backgroundColor: 'var(--danger-light)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-8)' }}>
           <div className="flex items-center gap-2 mb-6 text-danger">
             <h2 className="text-2xl font-bold">🚨 Leaving Campus Soon</h2>
             <span className="text-muted text-sm ml-auto">Urgent sales by seniors</span>
@@ -106,7 +106,7 @@ export default function Home() {
       )}
 
       {/* Trending / Featured */}
-      <section className="container my-8 py-8">
+      <section className="container my-6 py-8">
         <h2 className="text-2xl font-bold mb-6">Trending Near You</h2>
         {featuredListings.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

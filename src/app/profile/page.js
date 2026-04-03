@@ -75,7 +75,7 @@ export default function ProfileDashboard() {
       <div className="flex flex-col md:flex-row gap-8">
         
         {/* Sidebar Profile Card */}
-        <aside className="w-full md:w-1/3 flex-shrink-0">
+        <aside className="w-full md:w-1/3 flex-shrink-0 mb-12 md:mb-0">
           <div className="card p-6 text-center flex flex-col items-center gap-4" style={{ padding: 'var(--space-6)' }}>
             <div className="w-32 h-32 bg-primary-light text-primary rounded-full flex items-center justify-center font-bold text-5xl">
               {user.name.charAt(0)}
@@ -118,14 +118,14 @@ export default function ProfileDashboard() {
 
         {/* Main Content Dashboard */}
         <main className="w-full md:w-2/3">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-12">
             <h1 className="text-3xl font-bold">My Dashboard</h1>
             <button onClick={() => router.push("/post-item")} className="btn btn-primary">
               + New Listing
             </button>
           </div>
 
-          <div className="card p-6 mb-8" style={{ padding: 'var(--space-6)' }}>
+          <div className="card p-6 mb-6" style={{ padding: 'var(--space-6)' }}>
             <h3 className="text-xl font-bold mb-4">Active Listings ({myListings.length})</h3>
             {myListings.length > 0 ? (
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -141,25 +141,7 @@ export default function ProfileDashboard() {
             )}
           </div>
 
-          <div className="card p-6" style={{ padding: 'var(--space-6)' }}>
-            <h3 className="text-xl font-bold mb-4">Recent Activity & Reviews</h3>
-            <div className="flex flex-col gap-4">
-              <div className="p-4 border rounded-md" style={{ borderColor: 'var(--border)' }}>
-                <div className="flex justify-between mb-2">
-                  <span className="font-bold">Sold &quot;Casio FX-991EX&quot;</span>
-                  <span className="text-sm text-yellow-600">⭐ 5.0</span>
-                </div>
-                <p className="text-sm text-muted">&quot;Great seller, item was exactly as described and met near the library on time.&quot; - Freshman Tom</p>
-              </div>
-              <div className="p-4 border rounded-md" style={{ borderColor: 'var(--border)' }}>
-                <div className="flex justify-between mb-2">
-                  <span className="font-bold">Bought &quot;Engineering Drawing Board&quot;</span>
-                  <span className="text-sm text-yellow-600">⭐ 5.0</span>
-                </div>
-                <p className="text-sm text-muted">&quot;Thanks for negotiating on the price!&quot; - Senior Amanda</p>
-              </div>
-            </div>
-          </div>
+
         </main>
 
       </div>

@@ -71,7 +71,7 @@ export default function Marketplace() {
   }
 
   return (
-    <div className="container py-8 flex flex-col md:flex-row gap-8 animate-fade-in" style={{ display: 'flex', gap: 'var(--space-8)' }}>
+    <div className="container py-6 flex flex-col md:flex-row gap-8 animate-fade-in" style={{ display: 'flex', gap: 'var(--space-8)' }}>
       {/* Sidebar Filters */}
       <aside className="w-full md:w-64 flex-shrink-0" style={{ width: '100%', maxWidth: '240px' }}>
         <div className="card p-4" style={{ padding: 'var(--space-4)' }}>
