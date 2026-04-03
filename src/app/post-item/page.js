@@ -129,8 +129,8 @@ export default function PostItem() {
           </div>
 
           <div className="input-group">
-            <label className="input-label">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} required className="input-field" rows="4" placeholder="Describe the item condition, history, etc."></textarea>
+            <label className="input-label">Contact Information</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} required className="input-field" rows="4" placeholder="WhatsApp Number, Email, or Social Media handle for quick contact."></textarea>
           </div>
         </div>
 

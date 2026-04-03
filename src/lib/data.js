@@ -18,7 +18,7 @@ export const mockListings = [
   {
     id: "l1",
     title: "Engineering Mathematics Textbook",
-    description: "Good condition, slightly highlighted. Highly recommended for 1st-year students.",
+    description: "WhatsApp: +91 98765 43210. Good condition text book, slightly highlighted.",
     price: 25,
     category: "Textbooks",
     department: "Computer Science",
@@ -33,7 +33,7 @@ export const mockListings = [
   {
     id: "l2",
     title: "Drafting Table & T-Square",
-    description: "Full set for architecture drafting. Contains table, T-Square, and set squares.",
+    description: "Telegram: @jane_arch. Full set for architecture drafting. Contains table, T-Square, and set squares.",
     price: 40,
     category: "Engineering Tools",
     department: "Architecture",
@@ -48,7 +48,7 @@ export const mockListings = [
   {
     id: "l3",
     title: "Casio FX-991EX Scientific Calculator",
-    description: "Like new, barely used. Perfect for exams.",
+    description: "Email: mike.j@gmail.com. Like new Casio calculator, barely used. Perfect for exams.",
     price: 15,
     category: "Calculators",
     department: "Electrical",
@@ -63,7 +63,7 @@ export const mockListings = [
   {
     id: "l4",
     title: "First Year CS Notes + Midterm Papers",
-    description: "Passing it down to juniors. Very comprehensive notes.",
+    description: "DM on Instagram: @senior_sam. Passing it down to juniors. Very comprehensive notes.",
     price: 0,
     category: "Study Notes",
     department: "Computer Science",
@@ -78,7 +78,7 @@ export const mockListings = [
   {
     id: "l5",
     title: "Lab Coat (Medium)",
-    description: "Needed for chemistry labs. Cleaned and ironed.",
+    description: "Cell: +1 234 567 8900. Needed for chemistry labs. Cleaned and ironed.",
     price: 5,
     rentalPrice: 2,
     rentalPeriod: "semester",
