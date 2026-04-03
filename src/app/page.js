@@ -51,10 +51,10 @@ export default function Home() {
         overflow: 'hidden'
       }}>
         {/* Subtle background decoration */}
-        <div style={{ position: 'absolute', top: '-50%', left: '-10%', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(40px)' }}></div>
-        <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '250px', height: '250px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(30px)' }}></div>
+        <div style={{ position: 'absolute', top: '-50%', left: '-10%', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(40px)', pointerEvents: 'none' }}></div>
+        <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '250px', height: '250px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(30px)', pointerEvents: 'none' }}></div>
         
-        <div className="container flex flex-col items-center text-center gap-4 relative z-10">
+        <div className="container flex flex-col items-center text-center gap-4" style={{ position: 'relative', zIndex: 10 }}>
           <h1 className="text-2xl md:text-4xl" style={{ maxWidth: '800px', lineHeight: '1.4' }}>
             Buy, Sell, and Exchange on your Campus.
           </h1>

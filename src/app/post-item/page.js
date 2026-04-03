@@ -206,7 +206,7 @@ export default function PostItem() {
         {/* Image Upload placeholder */}
         <div className="flex flex-col gap-4 mt-4">
           <h3 className="text-xl font-bold border-b pb-2" style={{ borderBottom: '1px solid var(--border)' }}>Images</h3>
-          <div className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-8 text-center relative hover:bg-gray-50 transition" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
+          <div className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-8 text-center hover:bg-gray-50 transition" style={{ position: 'relative', borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
             <input 
               type="file" 
               multiple 
