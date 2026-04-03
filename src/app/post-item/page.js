@@ -182,7 +182,7 @@ export default function PostItem() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             <div className="input-group">
-              <label className="input-label">Price ($)</label>
+              <label className="input-label">Price (₹)</label>
               <input 
                 name="price" 
                 value={formData.price} 
@@ -212,7 +212,7 @@ export default function PostItem() {
               multiple 
               accept="image/*" 
               onChange={handleImageChange}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
               title="Click to upload images"
             />
             <span className="text-4xl mb-2">📸</span>

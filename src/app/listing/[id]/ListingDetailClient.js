@@ -133,7 +133,7 @@ export default function ListingDetailClient() {
             <p className="text-Sm text-muted mb-4">Posted on {listing.createdAt?.toDate ? listing.createdAt.toDate().toLocaleDateString() : new Date(listing.createdAt).toLocaleDateString()}</p>
             
             <div className="text-4xl font-bold text-primary mb-6">
-              {listing.price === 0 ? "FREE" : `$${listing.price}`}
+              {listing.price === 0 ? "FREE" : `₹${listing.price}`}
               {listing.listingType === "rent" && <span className="text-xl text-muted">/{listing.rentalPeriod}</span>}
             </div>
           </div>

@@ -40,7 +40,7 @@ export default function ListingCard({ listing }) {
         
         <div className="flex justify-between items-center mt-4">
           <div className="text-xl font-bold bg-clip-text text-transparent" style={{ color: "var(--primary)" }}>
-            {listing.price === 0 ? "FREE" : `$${listing.price}`}
+            {listing.price === 0 ? "FREE" : `₹${listing.price}`}
             {listing.listingType === "rent" && <span className="text-sm text-muted">/{listing.rentalPeriod}</span>}
           </div>
           
