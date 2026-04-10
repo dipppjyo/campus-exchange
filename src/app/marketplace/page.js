@@ -9,14 +9,14 @@ import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function Marketplace() {
   const { selectedCampus } = useCampus();
-  
+
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [department, setDepartment] = useState("");
   const [error, setError] = useState("");
-  
+
   // Real-time fetch from Firestore
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
@@ -76,13 +76,13 @@ export default function Marketplace() {
       <aside className="w-full md:w-64 flex-shrink-0" style={{ width: '100%', maxWidth: '240px' }}>
         <div className="card p-4" style={{ padding: 'var(--space-4)' }}>
           <h2 className="text-sm font-bold uppercase tracking-wider mb-3">Filters</h2>
-          
+
           <div className="input-group mb-3">
             <label className="text-xs font-semibold text-muted">Search</label>
-            <input 
-              type="text" 
-              className="input-field py-1.5 px-3 text-sm" 
-              placeholder="Items..." 
+            <input
+              type="text"
+              className="input-field py-1.5 px-3 text-sm"
+              placeholder="Items..."
               style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -91,7 +91,7 @@ export default function Marketplace() {
 
           <div className="input-group mb-3">
             <label className="text-xs font-semibold text-muted">Category</label>
-            <select 
+            <select
               className="input-field py-1.5 px-3 text-sm"
               style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={category}
@@ -104,7 +104,7 @@ export default function Marketplace() {
 
           <div className="input-group mb-4">
             <label className="text-xs font-semibold text-muted">Department</label>
-            <select 
+            <select
               className="input-field py-1.5 px-3 text-sm"
               style={{ fontSize: '0.875rem', padding: '0.5rem' }}
               value={department}
@@ -114,8 +114,8 @@ export default function Marketplace() {
               {mockDepartments.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
-          
-          <button 
+
+          <button
             className="btn btn-outline w-full py-1.5 text-xs font-bold"
             onClick={() => { setSearch(""); setCategory(""); setDepartment(""); }}
           >
@@ -152,7 +152,7 @@ export default function Marketplace() {
           </div>
         )}
       </main>
-      
+
       <style jsx>{`
         @media (max-width: 768px) {
           .container { flex-direction: column !important; }

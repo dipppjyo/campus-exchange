@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
   const signup = async (email, password, name, campus, department, year) => {
     try {
       const { user: firebaseUser } = await createUserWithEmailAndPassword(auth, email, password);
-      
+
       // Create user document in Firestore
       await setDoc(doc(db, "users", firebaseUser.uid), {
         name: name || "Campus Student",
