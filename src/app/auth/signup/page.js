@@ -12,12 +12,17 @@ export default function Signup() {
   const router = useRouter();
   const { signup, user, loading } = useAuth();
   const { availableCampuses } = useCampus();
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
-    if (!loading && user) {
+    setMounted(true);
+  }, []);
+  
+  useEffect(() => {
+    if (mounted && !loading && user) {
       router.push("/marketplace");
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, mounted]);
   
   const [formData, setFormData] = useState({
     name: "",

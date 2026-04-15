@@ -13,12 +13,17 @@ export default function Marketplace() {
   const { userCampus } = useCampus();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !authLoading && !user) {
       router.push("/auth/login");
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, mounted]);
 
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);

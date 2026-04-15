@@ -30,16 +30,21 @@ export function CampusProvider({ children }) {
 
   // Automatically set the campus from the logged-in user's profile
   useEffect(() => {
-    if (user && user.campus && availableCampuses.length > 0) {
-      // user.campus could be an ID (e.g. "c1") or a name (e.g. "State University")
-      const match = availableCampuses.find(
-        c => c.id === user.campus || c.name === user.campus
-      );
-      if (match) {
-        setUserCampus(match);
+    if (user && user.campus) {
+      if (availableCampuses.length > 0) {
+        // user.campus could be an ID (e.g. "c1") or a name (e.g. "State University")
+        const match = availableCampuses.find(
+          c => c.id === user.campus || c.name === user.campus
+        );
+        if (match) {
+          setUserCampus(match);
+        } else {
+          // Fallback: create a minimal campus object from the user's profile
+          setUserCampus({ id: user.campus, name: user.campus });
+        }
       } else {
-        // Fallback: create a minimal campus object from the user's profile
-        setUserCampus({ id: user.campus, name: user.campus });
+        // availableCampuses fetch still pending - set basic info if not already set
+        setUserCampus(prev => prev || { id: user.campus, name: user.campus });
       }
     } else if (!user) {
       setUserCampus(null);

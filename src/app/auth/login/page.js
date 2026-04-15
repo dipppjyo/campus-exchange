@@ -12,12 +12,17 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !loading && user) {
       router.push("/marketplace");
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, mounted]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

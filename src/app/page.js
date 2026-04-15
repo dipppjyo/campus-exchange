@@ -13,15 +13,20 @@ import { collection, query, limit, getDocs, orderBy } from "firebase/firestore";
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   const [urgentListings, setUrgentListings] = useState([]);
   const [featuredListings, setFeaturedListings] = useState([]);
 
   useEffect(() => {
-    if (!loading && !user) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !loading && !user) {
       router.push("/auth/login");
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, mounted]);
 
   useEffect(() => {
     const fetchHomeData = async () => {
