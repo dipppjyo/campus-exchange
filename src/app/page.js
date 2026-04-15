@@ -97,21 +97,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Trending / Featured */}
-      <section className="container my-6 py-8">
-        <h2 className="text-2xl font-bold mb-6">Trending Near You</h2>
-        {featuredListings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredListings.map(listing => (
-              <ListingCard key={`featured-${listing.id}`} listing={listing} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-surface border rounded-xl" style={{ borderColor: 'var(--border)' }}>
-            <p className="text-muted text-lg">No listings yet. Be the first to post an item!</p>
-          </div>
-        )}
-      </section>
     </div>
   );
 }
