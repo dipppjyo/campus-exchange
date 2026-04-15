@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useCampus } from "@/context/CampusContext";
 import { useRouter } from "next/navigation";
 import { mockCategories } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
@@ -12,6 +13,7 @@ import { collection, query, limit, getDocs, orderBy } from "firebase/firestore";
 
 export default function Home() {
   const { user, loading } = useAuth();
+  const { userCampus } = useCampus();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -30,27 +32,34 @@ export default function Home() {
 
   useEffect(() => {
     const fetchHomeData = async () => {
+      if (!userCampus) return;
+      
       try {
         const listingsRef = collection(db, "listings");
         const recentQuery = query(
           listingsRef,
           orderBy("createdAt", "desc"),
-          limit(20)
+          limit(50) // Fetch a larger set to filter by campus safely
         );
 
         const snapshot = await getDocs(recentQuery);
         const allListings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        setUrgentListings(allListings.filter(l => l.isUrgent).slice(0, 4));
-        setFeaturedListings(allListings.slice(0, 8));
+        // Filter by the user's specific campus
+        const campusListings = allListings.filter(l => l.campus === userCampus.id);
+        
+        setUrgentListings(campusListings.filter(l => l.isUrgent).slice(0, 4));
+        setFeaturedListings(campusListings.slice(0, 8));
       } catch (err) {
         console.error("Error fetching home data:", err);
       }
     };
 
-    fetchHomeData();
+    if (mounted && userCampus) {
+      fetchHomeData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mounted, userCampus]);
 
 
   if (loading) {
@@ -82,7 +91,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Urgent Sales */}
+      {/* Urgent Sales (Filtered by Campus) */}
       {urgentListings.length > 0 && (
         <section className="container my-6 py-8" style={{ backgroundColor: 'var(--danger-light)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-8)' }}>
           <div className="flex items-center gap-2 mb-6 text-danger">
@@ -97,6 +106,21 @@ export default function Home() {
         </section>
       )}
 
+      {/* Trending / Featured (Filtered by Campus) */}
+      <section className="container my-6 py-8">
+        <h2 className="text-2xl font-bold mb-6">Trending at {userCampus?.name || 'Your Campus'}</h2>
+        {featuredListings.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredListings.map(listing => (
+              <ListingCard key={`featured-${listing.id}`} listing={listing} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-surface border rounded-xl" style={{ borderColor: 'var(--border)' }}>
+            <p className="text-muted text-lg">No trending items in your campus yet. Be the first to post!</p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

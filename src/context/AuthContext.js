@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
         email,
         campus: campus || "State University",
         department: department || "General",
-        year: year || "Freshman",
+        year: year || "1st Year",
         joinedAt: serverTimestamp(),
         rating: { average: 5.0, count: 0 },
         exchanges: 0

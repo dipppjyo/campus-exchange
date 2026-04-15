@@ -84,7 +84,7 @@ export default function Signup() {
             
             <div className="input-group">
               <label className="input-label">Full Name</label>
-              <input name="name" type="text" required className="input-field" placeholder="Alex Doe" value={formData.name} onChange={handleChange} />
+              <input name="name" type="text" required className="input-field" placeholder="Your Name" value={formData.name} onChange={handleChange} />
             </div>
 
             <div className="input-group">
@@ -116,10 +116,10 @@ export default function Signup() {
             <div className="input-group">
               <label className="input-label">Year</label>
               <select name="year" required className="input-field" value={formData.year} onChange={handleChange}>
-                <option value="Freshman">Freshman (1st Year)</option>
-                <option value="Sophomore">Sophomore (2nd Year)</option>
-                <option value="Junior">Junior (3rd Year)</option>
-                <option value="Senior">Senior (4th Year)</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
                 <option value="Graduate">Graduate</option>
               </select>
             </div>
