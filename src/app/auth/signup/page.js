@@ -5,12 +5,19 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useCampus } from "@/context/CampusContext";
 import { mockDepartments } from "@/lib/data";
+import { useEffect } from "react";
 import Link from "next/link";
 
 export default function Signup() {
   const router = useRouter();
-  const { signup } = useAuth();
+  const { signup, user, loading } = useAuth();
   const { availableCampuses } = useCampus();
+  
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/marketplace");
+    }
+  }, [user, loading, router]);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +29,7 @@ export default function Signup() {
   });
   
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -35,6 +43,8 @@ export default function Signup() {
     }
     
     try {
+      setIsSubmitting(true);
+      setError("");
       await signup(
         formData.email, 
         formData.password, 
@@ -43,9 +53,10 @@ export default function Signup() {
         formData.department, 
         formData.year
       );
-      router.push("/marketplace");
+      // Redirect happens via useEffect once auth context recognizes user
     } catch (err) {
       setError(err.message || "Failed to create an account.");
+      setIsSubmitting(false);
     }
   };
 
@@ -115,8 +126,8 @@ export default function Signup() {
             <strong>Note:</strong> We will send a verification link to your email. Only verified students are allowed to post items.
           </div>
 
-          <button type="submit" className="btn btn-primary w-full mt-2 py-3 text-lg">
-            Create Account
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full mt-2 py-3 text-lg">
+            {isSubmitting ? "Creating..." : "Create Account"}
           </button>
         </form>
 

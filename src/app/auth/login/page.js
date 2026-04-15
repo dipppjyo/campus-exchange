@@ -7,10 +7,17 @@ import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/marketplace");
+    }
+  }, [user, loading, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +27,13 @@ export default function Login() {
     }
     
     try {
+      setIsSubmitting(true);
+      setError("");
       await login(email, password);
-      router.push("/marketplace");
+      // Redirect happens via useEffect once auth context recognizes user
     } catch (err) {
       setError("Invalid email or password.");
+      setIsSubmitting(false);
     }
   };
 
@@ -69,8 +79,8 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full mt-2 py-3 text-lg">
-            Login
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full mt-2 py-3 text-lg">
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
 

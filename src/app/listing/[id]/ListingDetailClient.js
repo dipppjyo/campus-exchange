@@ -167,31 +167,30 @@ export default function ListingDetailClient() {
             </div>
           )}
 
-          {/* Contact Information (Large Cards) */}
-          <div className="card px-6 py-8 md:px-10 md:py-10 border border-border shadow-lg mt-6 bg-surface rounded-[2rem] h-auto min-h-0 flex flex-col gap-8 overflow-hidden">
-            <h3 className="text-xl md:text-2xl font-bold border-b border-border pb-5 w-full">
-              <span className="whitespace-normal break-words leading-tight text-text-main">Contact Information</span>
-            </h3>
-            
-            <div className="bg-primary-light/10 rounded-xl py-4 pr-4 pl-10 border border-primary/20 shadow-sm w-full">
-              <p className="text-base leading-relaxed text-text-main whitespace-pre-wrap break-words font-medium">
+          {/* Contact Information (Clean List) */}
+          <div className="card p-6 md:p-8 pl-[10%] md:pl-[10%] border border-border shadow-sm mt-6 bg-surface rounded-3xl flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-2xl font-bold text-text-main">
+                Contact Information
+              </h3>
+              <p className="text-lg text-text-main whitespace-pre-wrap break-words">
                 {listing.description}
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full mt-2">
-              <div className="flex flex-col gap-2 p-5 bg-background/50 rounded-2xl border border-border/60 shadow-sm h-auto min-h-0 transition-all hover:border-primary/20">
-                <span className="text-[10px] text-muted font-black uppercase tracking-[0.15em] leading-none opacity-60">Condition</span>
-                <span className="font-bold text-text-main text-sm md:text-base capitalize whitespace-normal break-words">{listing.condition}</span>
-              </div>
-              <div className="flex flex-col gap-2 p-5 bg-background/50 rounded-2xl border border-border/60 shadow-sm h-auto min-h-0 transition-all hover:border-primary/20">
-                <span className="text-[10px] text-muted font-black uppercase tracking-[0.15em] leading-none opacity-60">Department</span>
-                <span className="font-bold text-text-main text-sm md:text-base whitespace-normal break-words">{listing.department}</span>
-              </div>
-              <div className="flex flex-col gap-2 p-5 bg-background/50 rounded-2xl border border-border/60 shadow-sm h-auto min-h-0 transition-all hover:border-primary/20">
-                <span className="text-[10px] text-muted font-black uppercase tracking-[0.15em] leading-none opacity-60">Category</span>
-                <span className="font-bold text-text-main text-sm md:text-base whitespace-normal break-words">{listing.category}</span>
-              </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-lg text-muted">Condition</span>
+              <span className="text-xl font-bold text-text-main capitalize">{listing.condition}</span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-lg text-muted">Department</span>
+              <span className="text-xl font-bold text-text-main">{listing.department}</span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-lg text-muted">Category</span>
+              <span className="text-xl font-bold text-text-main">{listing.category}</span>
             </div>
           </div>
         </div>
@@ -200,7 +199,7 @@ export default function ListingDetailClient() {
         <div className="lg:col-span-5 flex flex-col gap-8 animate-fade-in h-auto min-h-0" style={{ animationDelay: '0.2s' }}>
           
           {/* Main Pricing Card */}
-          <div className="card px-6 py-8 md:px-10 md:py-10 border border-border shadow-xl bg-surface relative overflow-visible rounded-[2rem] h-auto min-h-0">
+          <div className="card px-6 py-8 md:px-10 md:py-10 pl-[10%] md:pl-[10%] border border-border shadow-xl bg-surface relative overflow-visible rounded-[2rem] h-auto min-h-0">
             <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary opacity-[0.05] rounded-full blur-3xl pointer-events-none"></div>
             
             <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-border pb-8 w-full">
