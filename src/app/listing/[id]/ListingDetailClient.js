@@ -173,9 +173,9 @@ export default function ListingDetailClient() {
               <span className="whitespace-normal break-words leading-tight text-text-main">Contact Information</span>
             </h3>
             
-            <div className="bg-primary-light/10 rounded-3xl p-6 md:p-8 border border-primary/10 shadow-inner h-auto min-h-0 w-full">
-              <p className="text-base md:text-xl leading-relaxed text-text-main whitespace-pre-wrap break-words font-medium italic opacity-90 transition-opacity hover:opacity-100">
-                "{listing.description}"
+            <div className="bg-primary-light/10 rounded-xl py-4 pr-4 pl-10 border border-primary/20 shadow-sm w-full">
+              <p className="text-base leading-relaxed text-text-main whitespace-pre-wrap break-words font-medium">
+                {listing.description}
               </p>
             </div>
             
