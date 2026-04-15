@@ -2,16 +2,26 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { mockCategories } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
-import { useCampus } from "@/context/CampusContext";
+
 import { db } from "@/lib/firebase";
 import { collection, query, limit, getDocs, orderBy } from "firebase/firestore";
 
 export default function Home() {
-  const { selectedCampus } = useCampus();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
   const [urgentListings, setUrgentListings] = useState([]);
   const [featuredListings, setFeaturedListings] = useState([]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -38,43 +48,20 @@ export default function Home() {
   }, []);
 
 
+  if (loading) {
+    return (
+      <div className="container py-16 text-center animate-pulse">
+        <h2 className="text-2xl font-bold text-muted">Loading...</h2>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="animate-fade-in">
-      {/* Hero Section */}
-      <section style={{ 
-        background: 'linear-gradient(135deg, var(--primary) 0%, #6366F1 50%, #8B5CF6 100%)', 
-        color: 'white', 
-        padding: 'var(--space-12) 0',
-        borderRadius: '0 0 var(--radius-xl) var(--radius-xl)',
-        boxShadow: '0 10px 25px -5px rgba(79, 70, 229, 0.4)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* Subtle background decoration */}
-        <div style={{ position: 'absolute', top: '-50%', left: '-10%', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(40px)', pointerEvents: 'none' }}></div>
-        <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '250px', height: '250px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(30px)', pointerEvents: 'none' }}></div>
-        
-        <div className="container flex flex-col items-center text-center gap-4" style={{ position: 'relative', zIndex: 10 }}>
-          <h1 className="text-2xl md:text-4xl" style={{ maxWidth: '800px', lineHeight: '1.4' }}>
-            Buy, Sell, and Exchange on your Campus.
-          </h1>
-          <p className="text-base md:text-lg" style={{ maxWidth: '500px', opacity: 0.9, lineHeight: '1.6' }}>
-            Join your college community marketplace to find books, notes, and more.
-          </p>
-          
-          <div className="flex gap-3 mt-2" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link href="/marketplace" className="btn" style={{ backgroundColor: 'white', color: 'var(--primary)', padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}>
-              Browse Items
-            </Link>
-            {!selectedCampus && (
-              <Link href="/campus" className="btn btn-outline" style={{ color: 'white', borderColor: 'white', padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}>
-                Select Campus
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Categories */}
       <section className="container my-6 py-4">
         <div className="flex justify-between items-center mb-4">

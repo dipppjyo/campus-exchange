@@ -2,12 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { useCampus } from "@/context/CampusContext";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import ListingCard from "@/components/listings/ListingCard";
 import { db } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function Rentals() {
-  const { selectedCampus } = useCampus();
+  const { userCampus } = useCampus();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, authLoading, router]);
+
   const [rentalListings, setRentalListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,17 +55,19 @@ export default function Rentals() {
     }
   }, []);
 
-  const filtered = selectedCampus
-    ? rentalListings.filter(l => l.campus === selectedCampus.id)
+  const filtered = userCampus
+    ? rentalListings.filter(l => l.campus === userCampus.id)
     : rentalListings;
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="container py-16 text-center animate-pulse">
-        <h2 className="text-2xl font-bold text-muted">Loading rentals...</h2>
+        <h2 className="text-2xl font-bold text-muted">Loading...</h2>
       </div>
     );
   }
+
+  if (!user) return null;
 
   return (
     <div className="container py-16 animate-fade-in">
@@ -62,7 +75,7 @@ export default function Rentals() {
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">
-          {selectedCampus ? `Rentals at ${selectedCampus.name}` : 'All Rentals'}
+          {userCampus ? `Rentals at ${userCampus.name}` : 'All Rentals'}
         </h2>
         <span className="badge badge-accent">{filtered.length} available</span>
       </div>

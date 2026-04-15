@@ -1,4 +1,10 @@
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+
 export default function HowItWorks() {
+  const { user } = useAuth();
   return (
     <div className="container py-16 max-w-4xl mx-auto animate-fade-in">
       <div className="text-center mb-16">
@@ -43,8 +49,12 @@ export default function HowItWorks() {
       <div className="mt-16 text-center card p-12 bg-primary-light">
         <h2 className="text-3xl font-bold mb-6 text-primary">Ready to declutter or save money?</h2>
         <div className="flex justify-center gap-4">
-          <a href="/auth/signup" className="btn btn-primary text-lg px-8">Join Your Campus</a>
-          <a href="/marketplace" className="btn btn-outline text-lg px-8 bg-white">Browse Now</a>
+          <Link href={user ? "/post-item" : "/auth/signup"} className="btn btn-primary text-lg px-8">
+            {user ? "Post an Item" : "Join Your Campus"}
+          </Link>
+          {user && (
+            <Link href="/marketplace" className="btn btn-outline text-lg px-8 bg-white">Browse Now</Link>
+          )}
         </div>
       </div>
     </div>

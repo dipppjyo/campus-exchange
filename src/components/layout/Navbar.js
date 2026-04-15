@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useCampus } from "@/context/CampusContext";
+
 import { useState } from "react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const { selectedCampus } = useCampus();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -20,18 +20,15 @@ export default function Navbar() {
         
         {/* Desktop & Mobile Nav */}
         <div className="flex items-center gap-6 md-flex nav-links" style={{ display: 'none' }}>
-          <Link href="/marketplace" className="font-bold" onClick={() => setIsMenuOpen(false)}>Marketplace</Link>
-          <Link href="/free-items" onClick={() => setIsMenuOpen(false)}>Free Items</Link>
-          <Link href="/rentals" onClick={() => setIsMenuOpen(false)}>Rentals</Link>
-          <Link href="/how-it-works" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
-          
-          {selectedCampus ? (
-            <Link href="/campus" className="badge badge-primary">
-              {selectedCampus.name.split(',')[0]}
-            </Link>
-          ) : (
-            <Link href="/campus" className="badge badge-primary">Select Campus</Link>
+          {user && (
+            <>
+              <Link href="/marketplace" className="font-bold" onClick={() => setIsMenuOpen(false)}>Marketplace</Link>
+              <Link href="/free-items" onClick={() => setIsMenuOpen(false)}>Free Items</Link>
+              <Link href="/rentals" onClick={() => setIsMenuOpen(false)}>Rentals</Link>
+            </>
           )}
+          <Link href="/how-it-works" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
+
 
           {user ? (
             <div className="flex items-center gap-4">

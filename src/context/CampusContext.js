@@ -3,11 +3,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { useAuth } from "@/context/AuthContext";
 
 const CampusContext = createContext();
 
 export function CampusProvider({ children }) {
-  const [selectedCampus, setSelectedCampus] = useState(null);
+  const { user } = useAuth();
+  const [userCampus, setUserCampus] = useState(null);
   const [availableCampuses, setAvailableCampuses] = useState([]);
 
   // Fetch available campuses from Firestore
@@ -26,25 +28,26 @@ export function CampusProvider({ children }) {
     }
   }, []);
 
+  // Automatically set the campus from the logged-in user's profile
   useEffect(() => {
-    const saved = localStorage.getItem("selected_campus");
-    if (saved) {
-      try {
-        setSelectedCampus(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse campus from localStorage", e);
+    if (user && user.campus && availableCampuses.length > 0) {
+      // user.campus could be an ID (e.g. "c1") or a name (e.g. "State University")
+      const match = availableCampuses.find(
+        c => c.id === user.campus || c.name === user.campus
+      );
+      if (match) {
+        setUserCampus(match);
+      } else {
+        // Fallback: create a minimal campus object from the user's profile
+        setUserCampus({ id: user.campus, name: user.campus });
       }
+    } else if (!user) {
+      setUserCampus(null);
     }
-  }, []);
-
-  useEffect(() => {
-    if (selectedCampus) {
-      localStorage.setItem("selected_campus", JSON.stringify(selectedCampus));
-    }
-  }, [selectedCampus]);
+  }, [user, availableCampuses]);
 
   return (
-    <CampusContext.Provider value={{ selectedCampus, setSelectedCampus, availableCampuses }}>
+    <CampusContext.Provider value={{ userCampus, availableCampuses }}>
       {children}
     </CampusContext.Provider>
   );

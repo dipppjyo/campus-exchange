@@ -2,12 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { useCampus } from "@/context/CampusContext";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import ListingCard from "@/components/listings/ListingCard";
 import { db } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function FreeItems() {
-  const { selectedCampus } = useCampus();
+  const { userCampus } = useCampus();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, authLoading, router]);
+
   const [freeListings, setFreeListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,17 +55,19 @@ export default function FreeItems() {
     }
   }, []);
 
-  const filtered = selectedCampus 
-    ? freeListings.filter(l => l.campus === selectedCampus.id)
+  const filtered = userCampus 
+    ? freeListings.filter(l => l.campus === userCampus.id)
     : freeListings;
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="container py-16 text-center animate-pulse">
-        <h2 className="text-2xl font-bold text-muted">Loading free items...</h2>
+        <h2 className="text-2xl font-bold text-muted">Loading...</h2>
       </div>
     );
   }
+
+  if (!user) return null;
 
   return (
     <div className="container py-16 animate-fade-in">
@@ -62,7 +75,7 @@ export default function FreeItems() {
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">
-          {selectedCampus ? `Free items at ${selectedCampus.name}` : 'All Free Items'}
+          {userCampus ? `Free items at ${userCampus.name}` : 'All Free Items'}
         </h2>
         <span className="badge badge-secondary">{filtered.length} available</span>
       </div>

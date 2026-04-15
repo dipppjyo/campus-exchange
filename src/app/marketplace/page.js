@@ -4,11 +4,21 @@ import { useState, useEffect } from "react";
 import { mockCategories, mockDepartments } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
 import { useCampus } from "@/context/CampusContext";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function Marketplace() {
-  const { selectedCampus } = useCampus();
+  const { userCampus } = useCampus();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, authLoading, router]);
 
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,83 +65,38 @@ export default function Marketplace() {
 
   // Filter logic
   const filteredListings = listings.filter(listing => {
-    if (selectedCampus && listing.campus !== selectedCampus.id) return false;
+    if (userCampus && listing.campus !== userCampus.id) return false;
     if (search && !listing.title.toLowerCase().includes(search.toLowerCase())) return false;
     if (category && listing.category !== category) return false;
     if (department && listing.department !== department) return false;
     return true;
   });
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="container py-16 text-center animate-pulse">
-        <h2 className="text-2xl font-bold text-muted">Loading campus items...</h2>
+        <h2 className="text-2xl font-bold text-muted">Loading...</h2>
       </div>
     );
   }
 
+  if (!user) return null;
+
   return (
-    <div className="container py-6 flex flex-col md:flex-row gap-8 animate-fade-in" style={{ display: 'flex', gap: 'var(--space-8)' }}>
-      {/* Sidebar Filters */}
-      <aside className="w-full md:w-64 flex-shrink-0" style={{ width: '100%', maxWidth: '240px' }}>
-        <div className="card p-4" style={{ padding: 'var(--space-4)' }}>
-          <h2 className="text-sm font-bold uppercase tracking-wider mb-3">Filters</h2>
-
-          <div className="input-group mb-3">
-            <label className="text-xs font-semibold text-muted">Search</label>
-            <input
-              type="text"
-              className="input-field py-1.5 px-3 text-sm"
-              placeholder="Items..."
-              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <div className="input-group mb-3">
-            <label className="text-xs font-semibold text-muted">Category</label>
-            <select
-              className="input-field py-1.5 px-3 text-sm"
-              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All</option>
-              {mockCategories.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-
-          <div className="input-group mb-4">
-            <label className="text-xs font-semibold text-muted">Department</label>
-            <select
-              className="input-field py-1.5 px-3 text-sm"
-              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              <option value="">All</option>
-              {mockDepartments.map(d => <option key={d} value={d}>{d}</option>)}
-            </select>
-          </div>
-
-          <button
-            className="btn btn-outline w-full py-1.5 text-xs font-bold"
-            onClick={() => { setSearch(""); setCategory(""); setDepartment(""); }}
-          >
-            Clear Filters
-          </button>
-        </div>
-      </aside>
+    <div className="container py-6 flex flex-col gap-6 animate-fade-in">
+      <div className="flex gap-4 items-center bg-surface p-4 rounded-xl border shadow-sm" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+        <input
+          type="text"
+          className="input-field flex-grow py-2 px-4"
+          placeholder="Search items by title..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: '100%' }}
+        />
+      </div>
 
       {/* Main Content */}
-      <main className="flex-grow">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">
-            {selectedCampus ? `${selectedCampus.name} Marketplace` : "Global Marketplace"}
-          </h1>
-          <span className="text-muted">{filteredListings.length} results</span>
-        </div>
+      <main className="flex-grow w-full">
 
         {error && (
           <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--danger-light)', color: 'var(--danger)', border: '1px solid var(--danger)' }}>
@@ -152,14 +117,6 @@ export default function Marketplace() {
           </div>
         )}
       </main>
-
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .container { flex-direction: column !important; }
-          aside { max-width: 100% !important; }
-        }
-      `}
-      </style>
     </div>
   );
 }
