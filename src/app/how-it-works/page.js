@@ -8,7 +8,7 @@ export default function HowItWorks() {
   return (
     <div className="container py-16 max-w-4xl mx-auto animate-fade-in">
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">How CampusSwap Works</h1>
+        <h1 className="text-4xl font-bold mb-4">How ScholarMart Works</h1>
         <p className="text-xl text-muted">A safe, verified marketplace exclusively for students.</p>
       </div>
 

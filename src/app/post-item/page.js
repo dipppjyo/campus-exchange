@@ -92,7 +92,7 @@ export default function PostItem() {
       <div className="container py-16 text-center animate-fade-in">
         <div className="card p-8 max-w-md mx-auto" style={{ padding: 'var(--space-8)' }}>
           <h2 className="text-2xl font-bold mb-4">Verification Required</h2>
-          <p className="text-muted mb-6">You must be logged in as a verified student to post items on CampusSwap.</p>
+          <p className="text-muted mb-6">You must be logged in as a verified student to post items on ScholarMart.</p>
           <div className="flex flex-col gap-2">
             <button onClick={() => router.push("/auth/login")} className="btn btn-primary">Login Now</button>
             <button onClick={() => router.push("/auth/signup")} className="btn btn-outline">Sign Up</button>

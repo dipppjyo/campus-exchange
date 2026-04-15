@@ -15,8 +15,8 @@ export default function Navbar() {
       {/* ... */}
       <div className="container flex justify-between items-center" style={{ height: '70px' }}>
         <Link href="/" className="flex items-center gap-2">
-          <div style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-md)', fontWeight: 'bold' }}>CS</div>
-          <span className="font-bold text-xl" style={{ fontFamily: 'var(--font-heading)' }}>CampusSwap</span>
+          <div style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-md)', fontWeight: 'bold' }}>SM</div>
+          <span className="font-bold text-xl" style={{ fontFamily: 'var(--font-heading)' }}>ScholarMart</span>
         </Link>
         
         {/* Desktop & Mobile Nav */}
