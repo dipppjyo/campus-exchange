@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from "firebase/auth";
+
+export const googleProvider = new GoogleAuthProvider();
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 

@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 
 export default function ListingDetailClient() {
   const { id } = useParams();
@@ -12,6 +12,8 @@ export default function ListingDetailClient() {
   const { user } = useAuth();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   
   const [activeImage, setActiveImage] = useState(0);
 
@@ -33,6 +35,22 @@ export default function ListingDetailClient() {
     fetchListing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const handleDeleteListing = async () => {
+    if (!listing) return;
+    try {
+      setDeleting(true);
+      await deleteDoc(doc(db, "listings", listing.id));
+      alert("Listing deleted successfully.");
+      router.push("/marketplace");
+    } catch (err) {
+      console.error("Error deleting listing:", err);
+      alert("Failed to delete listing. Please try again.");
+    } finally {
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
 
   const handleContact = async () => {
     if (!user) {
@@ -122,9 +140,40 @@ export default function ListingDetailClient() {
   };
 
   const config = badgeConfig[listing.listingType] || badgeConfig.sell;
+  const isOwner = user && user.id === listing.sellerId;
 
   return (
     <div className="container py-8 max-w-6xl mx-auto">
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="confirm-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+            <span style={{ fontSize: '3rem', display: 'block', marginBottom: 'var(--space-4)' }}>🗑️</span>
+            <h3 className="text-xl font-bold" style={{ marginBottom: 'var(--space-2)' }}>Delete this listing?</h3>
+            <p className="text-muted" style={{ marginBottom: 'var(--space-6)', fontSize: '0.875rem' }}>
+              This will permanently remove &ldquo;{listing.title}&rdquo; from the marketplace. This action cannot be undone.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="btn btn-outline"
+                style={{ flex: 1 }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteListing}
+                disabled={deleting}
+                className="btn btn-danger"
+                style={{ flex: 1 }}
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 mb-8 text-sm text-muted font-medium animate-fade-in">
         <button onClick={() => router.push("/marketplace")} className="hover:text-primary transition-colors">Marketplace</button>
@@ -223,13 +272,24 @@ export default function ListingDetailClient() {
             </div>
 
             <div className="flex flex-col gap-5 w-full h-auto min-h-0">
-              <button 
-                onClick={handleContact} 
-                className="btn btn-primary w-full py-5 px-8 text-lg md:text-2xl font-black shadow-xl hover:shadow-primary/30 transition-all active:scale-[0.98] rounded-2xl flex items-center justify-center gap-4 h-auto min-h-0 text-center whitespace-normal break-words"
-              >
-                <span className="text-3xl flex-shrink-0">💬</span>
-                <span>Chat with Seller</span>
-              </button>
+              {isOwner ? (
+                <button 
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="btn btn-danger w-full py-5 px-8 text-lg md:text-2xl font-black shadow-xl transition-all active:scale-[0.98] rounded-2xl flex items-center justify-center gap-4 h-auto min-h-0 text-center whitespace-normal break-words"
+                  id="delete-listing-btn"
+                >
+                  <span className="text-3xl flex-shrink-0">🗑️</span>
+                  <span>Delete Listing</span>
+                </button>
+              ) : (
+                <button 
+                  onClick={handleContact} 
+                  className="btn btn-primary w-full py-5 px-8 text-lg md:text-2xl font-black shadow-xl hover:shadow-primary/30 transition-all active:scale-[0.98] rounded-2xl flex items-center justify-center gap-4 h-auto min-h-0 text-center whitespace-normal break-words"
+                >
+                  <span className="text-3xl flex-shrink-0">💬</span>
+                  <span>Chat with Seller</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -237,5 +297,3 @@ export default function ListingDetailClient() {
     </div>
   );
 }
-
-

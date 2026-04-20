@@ -48,8 +48,12 @@ export default function Home() {
         // Filter by the user's specific campus
         const campusListings = allListings.filter(l => l.campus === userCampus.id);
         
-        setUrgentListings(campusListings.filter(l => l.isUrgent).slice(0, 4));
-        setFeaturedListings(campusListings.slice(0, 8));
+        const urgent = campusListings.filter(l => l.isUrgent).slice(0, 4);
+        setUrgentListings(urgent);
+        
+        // Featured/Trending should exclude the ones already shown in Urgent section
+        const urgentIds = new Set(urgent.map(l => l.id));
+        setFeaturedListings(campusListings.filter(l => !urgentIds.has(l.id)).slice(0, 8));
       } catch (err) {
         console.error("Error fetching home data:", err);
       }

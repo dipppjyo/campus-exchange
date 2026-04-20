@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup } from "firebase/auth";
+import { auth, db, googleProvider } from "@/lib/firebase";
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -42,9 +42,12 @@ export function AuthProvider({ children }) {
             id: firebaseUser.uid,
             name: firebaseUser.displayName || userData.name || "Campus Student",
             email: firebaseUser.email,
+            photoURL: firebaseUser.photoURL || userData.photoURL || null,
             campus: userData.campus || "State University",
             department: userData.department || "General",
+            year: userData.year || "1st Year",
             rating: userData.rating || { average: 5.0, count: 0 },
+            exchanges: userData.exchanges || 0,
           });
         } else {
           setUser(null);
@@ -96,6 +99,57 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const firebaseUser = result.user;
+
+      // Check if user doc already exists
+      const userDocRef = doc(db, "users", firebaseUser.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        // First time Google sign-in: create Firestore profile
+        await setDoc(userDocRef, {
+          name: firebaseUser.displayName || "Campus Student",
+          email: firebaseUser.email,
+          photoURL: firebaseUser.photoURL || null,
+          campus: "State University",
+          department: "General",
+          year: "1st Year",
+          joinedAt: serverTimestamp(),
+          rating: { average: 5.0, count: 0 },
+          exchanges: 0
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      throw error;
+    }
+  };
+
+  const updateProfile = async (updates) => {
+    if (!user) throw new Error("Not logged in");
+
+    try {
+      const userDocRef = doc(db, "users", user.id);
+      await updateDoc(userDocRef, updates);
+
+      // Update local state immediately
+      setUser(prev => ({
+        ...prev,
+        ...updates
+      }));
+
+      return true;
+    } catch (error) {
+      console.error("Profile update error:", error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -105,7 +159,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, loginWithGoogle, updateProfile, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
