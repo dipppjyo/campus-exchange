@@ -29,7 +29,7 @@ export default function Login() {
 
   useEffect(() => {
     if (mounted && !loading && user) {
-      router.push("/marketplace");
+      router.push("/");
     }
   }, [user, loading, router, mounted]);
 

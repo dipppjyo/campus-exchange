@@ -29,7 +29,7 @@ export default function Signup() {
   
   useEffect(() => {
     if (mounted && !loading && user) {
-      router.push("/marketplace");
+      router.push("/");
     }
   }, [user, loading, router, mounted]);
   

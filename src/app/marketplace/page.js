@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { mockCategories, mockDepartments } from "@/lib/data";
 import ListingCard from "@/components/listings/ListingCard";
 import { useCampus } from "@/context/CampusContext";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
-export default function Marketplace() {
+function MarketplaceContent() {
   const { userCampus } = useCampus();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -28,9 +29,16 @@ export default function Marketplace() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(searchParams.get("category") || "");
   const [department, setDepartment] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const urlCategory = searchParams.get("category");
+    if (urlCategory !== null) {
+      setCategory(urlCategory);
+    }
+  }, [searchParams]);
 
   // Real-time fetch from Firestore
   useEffect(() => {
@@ -89,15 +97,49 @@ export default function Marketplace() {
 
   return (
     <div className="container py-6 flex flex-col gap-6 animate-fade-in">
-      <div className="flex gap-4 items-center bg-surface p-4 rounded-xl border shadow-sm" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
-        <input
-          type="text"
-          className="input-field flex-grow py-2 px-4"
-          placeholder="Search items by title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ width: '100%' }}
-        />
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-grow gap-4 items-center bg-surface p-4 rounded-xl border shadow-sm" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+          <input
+            type="text"
+            className="input-field flex-grow py-2 px-4"
+            placeholder="Search items by title..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: '100%' }}
+          />
+        </div>
+        
+        <div className="flex gap-4 items-center bg-surface p-4 rounded-xl border shadow-sm" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
+          <select 
+            className="input-field py-2 px-4" 
+            value={category} 
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            {mockCategories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Category Pills (Optional visual filter) */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <button 
+          onClick={() => setCategory("")} 
+          className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${!category ? 'bg-primary text-white' : 'bg-surface border border-border text-foreground hover:bg-surface-hover'}`}
+        >
+          All
+        </button>
+        {mockCategories.map(cat => (
+          <button 
+            key={cat}
+            onClick={() => setCategory(cat)} 
+            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${category === cat ? 'bg-primary text-white' : 'bg-surface border border-border text-foreground hover:bg-surface-hover'}`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {/* Main Content */}
@@ -123,5 +165,17 @@ export default function Marketplace() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function Marketplace() {
+  return (
+    <Suspense fallback={
+      <div className="container py-16 text-center animate-pulse">
+        <h2 className="text-2xl font-bold text-muted">Loading Marketplace...</h2>
+      </div>
+    }>
+      <MarketplaceContent />
+    </Suspense>
   );
 }
