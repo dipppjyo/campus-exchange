@@ -289,16 +289,7 @@ export default function ProfileDashboard() {
               <p className="text-muted">{user.email}</p>
             </div>
             
-            <div className="w-full flex justify-between bg-surface border px-4 py-3 rounded-lg" style={{ borderColor: 'var(--border)' }}>
-              <div className="text-center">
-                <div className="font-bold text-lg text-primary">⭐ {user.rating?.average || 5.0}</div>
-                <div className="text-xs text-muted">Trust Score</div>
-              </div>
-              <div className="text-center">
-                <div className="font-bold text-lg text-primary">{user.exchanges || 0}</div>
-                <div className="text-xs text-muted">Exchanges</div>
-              </div>
-            </div>
+
 
             <div className="w-full text-left mt-4 text-sm flex flex-col gap-2">
               <div className="flex justify-between border-b pb-1" style={{ borderColor: 'var(--border)' }}>

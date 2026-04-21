@@ -123,24 +123,7 @@ function MarketplaceContent() {
         </div>
       </div>
 
-      {/* Category Pills (Optional visual filter) */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        <button 
-          onClick={() => setCategory("")} 
-          className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${!category ? 'bg-primary text-white' : 'bg-surface border border-border text-foreground hover:bg-surface-hover'}`}
-        >
-          All
-        </button>
-        {mockCategories.map(cat => (
-          <button 
-            key={cat}
-            onClick={() => setCategory(cat)} 
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${category === cat ? 'bg-primary text-white' : 'bg-surface border border-border text-foreground hover:bg-surface-hover'}`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+
 
       {/* Main Content */}
       <main className="flex-grow w-full">
