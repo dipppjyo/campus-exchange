@@ -43,11 +43,12 @@ export function AuthProvider({ children }) {
             name: firebaseUser.displayName || userData.name || "Campus Student",
             email: firebaseUser.email,
             photoURL: firebaseUser.photoURL || userData.photoURL || null,
-            campus: userData.campus || "State University",
-            department: userData.department || "General",
-            year: userData.year || "1st Year",
+            campus: userData.campus !== undefined ? userData.campus : "State University",
+            department: userData.department !== undefined ? userData.department : "General",
+            year: userData.year !== undefined ? userData.year : "1st Year",
             rating: userData.rating || { average: 5.0, count: 0 },
             exchanges: userData.exchanges || 0,
+            isNewGoogleUser: userData.isNewGoogleUser || false
           });
         } else {
           setUser(null);
@@ -107,23 +108,25 @@ export function AuthProvider({ children }) {
       // Check if user doc already exists
       const userDocRef = doc(db, "users", firebaseUser.uid);
       const userDocSnap = await getDoc(userDocRef);
+      const isNewUser = !userDocSnap.exists();
 
-      if (!userDocSnap.exists()) {
-        // First time Google sign-in: create Firestore profile
+      if (isNewUser) {
+        // First time Google sign-in: create Firestore profile with a flag
         await setDoc(userDocRef, {
           name: firebaseUser.displayName || "Campus Student",
           email: firebaseUser.email,
           photoURL: firebaseUser.photoURL || null,
-          campus: "State University",
-          department: "General",
-          year: "1st Year",
+          campus: "", // Empty so we know to ask
+          department: "",
+          year: "",
           joinedAt: serverTimestamp(),
           rating: { average: 5.0, count: 0 },
-          exchanges: 0
+          exchanges: 0,
+          isNewGoogleUser: true
         });
       }
 
-      return true;
+      return { isNewUser };
     } catch (error) {
       console.error("Google sign-in error:", error);
       throw error;

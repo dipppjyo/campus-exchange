@@ -29,7 +29,11 @@ export default function Signup() {
   
   useEffect(() => {
     if (mounted && !loading && user) {
-      router.push("/");
+      if (user.isNewGoogleUser) {
+        router.push("/auth/complete-profile");
+      } else {
+        router.push("/");
+      }
     }
   }, [user, loading, router, mounted]);
   
@@ -78,8 +82,9 @@ export default function Signup() {
     try {
       setIsSubmitting(true);
       setError("");
-      await loginWithGoogle();
-      // Redirect happens via useEffect
+      const { isNewUser } = await loginWithGoogle();
+      
+      // Redirect happens via useEffect based on user.isNewGoogleUser state
     } catch (err) {
       setError(err.message || "Google sign-in failed. Please try again.");
       setIsSubmitting(false);
