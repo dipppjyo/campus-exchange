@@ -217,7 +217,7 @@ export default function ListingDetailClient() {
           )}
 
           {/* Contact Information (Clean List) */}
-          <div className="p-6 md:p-8 pl-[10%] md:pl-[10%] mt-6 flex flex-col gap-6">
+          <div className="py-2 px-4 md:px-6 md:py-2 pl-[10%] md:pl-[10%] mt-2 flex flex-col gap-2">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl font-bold text-text-main">
                 Contact Information
