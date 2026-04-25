@@ -112,7 +112,7 @@ export default function Home() {
 
       {/* Trending / Featured (Filtered by Campus) */}
       <section className="container my-6 py-8">
-        <h2 className="text-2xl font-bold mb-6">Trending at {userCampus?.name || 'Your Campus'}</h2>
+        <h2 className="text-2xl font-bold mb-8">Trending at {userCampus?.name || 'Your Campus'}</h2>
         {featuredListings.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {featuredListings.map(listing => (
