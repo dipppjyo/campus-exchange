@@ -190,7 +190,7 @@ export default function ListingDetailClient() {
             <img 
               src={listing.images[activeImage]} 
               alt={listing.title} 
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+              className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" 
             />
             {listing.isUrgent && (
               <div className="absolute top-6 left-6 badge badge-danger py-2 px-4 shadow-lg text-sm">
@@ -217,7 +217,7 @@ export default function ListingDetailClient() {
           )}
 
           {/* Contact Information (Clean List) */}
-          <div className="card p-6 md:p-8 pl-[10%] md:pl-[10%] border border-border shadow-sm mt-6 bg-surface rounded-3xl flex flex-col gap-6">
+          <div className="p-6 md:p-8 pl-[10%] md:pl-[10%] mt-6 flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl font-bold text-text-main">
                 Contact Information
@@ -248,7 +248,7 @@ export default function ListingDetailClient() {
         <div className="lg:col-span-5 flex flex-col gap-8 animate-fade-in h-auto min-h-0" style={{ animationDelay: '0.2s' }}>
           
           {/* Main Pricing Card */}
-          <div className="card px-6 py-8 md:px-10 md:py-10 pl-[10%] md:pl-[10%] border border-border shadow-xl bg-surface relative overflow-visible rounded-[2rem] h-auto min-h-0">
+          <div className="px-6 py-8 md:px-10 md:py-10 pl-[10%] md:pl-[10%] relative overflow-visible h-auto min-h-0">
             <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary opacity-[0.05] rounded-full blur-3xl pointer-events-none"></div>
             
             <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-border pb-8 w-full">
