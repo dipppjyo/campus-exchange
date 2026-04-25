@@ -185,12 +185,12 @@ export default function ListingDetailClient() {
         
         {/* Left Column: Visuals (7 cols) */}
         <div className="lg:col-span-7 flex flex-col gap-6 animate-slide-up">
-          <div className="relative group rounded-3xl overflow-hidden card border-0 shadow-lg aspect-square bg-surface">
+          <div className="relative group rounded-3xl overflow-hidden card border-0 shadow-lg bg-surface flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src={listing.images[activeImage]} 
               alt={listing.title} 
-              className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" 
+              className="w-full h-auto max-h-[80vh] object-contain transition-transform duration-500 group-hover:scale-105" 
             />
             {listing.isUrgent && (
               <div className="absolute top-6 left-6 badge badge-danger py-2 px-4 shadow-lg text-sm">
